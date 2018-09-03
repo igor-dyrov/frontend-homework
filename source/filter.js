@@ -2,11 +2,11 @@
 
 const TAGEXPR = /<([^>]+)>/g;
 const MNEMES = {
-			"'": "&#39;",
-			'\"' : '&quot;',
-		'&' : '&amp;',
-		'<' : '&lt;',
-		'>' : '&gt;'
+	"\'": "&#39;",
+	'\"' : '&quot;',
+	'&' : '&amp;',
+	'<' : '&lt;',
+	'>' : '&gt;'
 };
 
 const mNemReplace = str => str.replace(/./gi, symbol => MNEMES[symbol] || symbol);

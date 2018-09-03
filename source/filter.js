@@ -1,17 +1,17 @@
 'use strict';
 
+const TAGEXPR = /<([^>]+)>/g;
+const MNEMES = {
+			"'": "&#39;",
+			'\"' : '&quot;',
+		'&' : '&amp;',
+		'<' : '&lt;',
+		'>' : '&gt;'
+};
+
 const mNemReplace = str => str.replace(/./gi, symbol => MNEMES[symbol] || symbol);
 
 function filter(code, tags) {
-
-	const TAGEXPR = /<([^>]+)>/g;
-	const MNEMES = {
-  			"'": "&#39;",
-  			'\"' : '&quot;',
-			'&' : '&amp;',
-			'<' : '&lt;',
-			'>' : '&gt;'
-	};
 
 	let valid = false;
 	let log = []; // watch for tags
@@ -30,7 +30,7 @@ function filter(code, tags) {
 		}
 		if (tags.find(item => item === log[log.length - 1])) {
 			if (!valid) {
-				newString += MnemReplace(code.substring(begin, end));
+				newString += mNemReplace(code.substring(begin, end));
 				begin = end;
 			}
 			valid = true;
@@ -44,7 +44,7 @@ function filter(code, tags) {
 	}
 
 	if (begin < code.length + 1) {
-		newString += MnemReplace(code.substring(begin));
+		newString += mNemReplace(code.substring(begin));
 	}
 	
 	return newString;

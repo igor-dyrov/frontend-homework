@@ -27,10 +27,15 @@ QUnit.module('Проверка работы функции filter', function () 
 	});
 
 	QUnit.test('filter экранирует текст до тэгов и после тэгов', function (assert) {
-		assert.strictEqual(filter(`1& <strong>Hello, <em>World!</em></strong> 1 + 2 < 4!`, [ 'strong', 'em' ]), '1&amp; <strong>Hello, <em>World!</em></strong> 1 + 2 &lt; 4!');
+		assert.strictEqual(filter(`&<strong>Hello, <em>World!</em></strong> 1 + 2 < 4!`, [ 'strong', 'em' ]), '&amp;<strong>Hello, <em>World!</em></strong> 1 + 2 &lt; 4!');
 	});
 
 	QUnit.test('вложенность тэгов', function (assert) {
 		assert.strictEqual(filter(`<strong> Example <script> & </script> </strong>`, ['strong']), '<strong> Example &lt;script&gt; &amp; &lt;/script&gt; </strong>');
 	});
+
+	 QUnit.test('одиночные тэги', function (assert) {
+		assert.strictEqual(filter(`<strong> Example <em> & </strong>`, ['strong', 'em']), '<strong> Example <em> &amp; </strong>');
+		assert.strictEqual(filter('<img src="..." >', ['img']), '<img src="..." >');
+	 });
 });

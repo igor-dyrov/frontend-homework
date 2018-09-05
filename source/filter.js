@@ -1,51 +1,32 @@
 'use strict';
 
-const TAGEXPR = /<([^>]+)>/g;
+const TAGEXPR = /<\/?([^>\s]+)[^>]*>/g;
 const MNEMES = {
-			"'": "&#39;",
-			'\"' : '&quot;',
-		'&' : '&amp;',
-		'<' : '&lt;',
-		'>' : '&gt;'
+    '\'': '&#39;',
+    '"' : '&quot;',
+    '&' : '&amp;',
+    '<' : '&lt;',
+    '>' : '&gt;'
 };
-
-const mNemReplace = str => str.replace(/./gi, symbol => MNEMES[symbol] || symbol);
+const symbolReplace = str => str.replace(/./g, symbol => MNEMES[symbol] || symbol);
 
 function filter(code, tags) {
-
-	let valid = false;
-	let log = []; // watch for tags
-	let begin = 0; // prev code block`s bieginning index
-	let result;
-	let newString = '';
-	let end;
-
-	while (result = TAGEXPR.exec(code)) {
-		if (result[1][0] != '\/') {
-			log.push(result[1]);
-			end = result.index;
-		} else {
-			log.pop();
-			end = TAGEXPR.lastIndex + 1;
-		}
-		if (tags.find(item => item === log[log.length - 1])) {
-			if (!valid) {
-				newString += mNemReplace(code.substring(begin, end));
-				begin = end;
-			}
-			valid = true;
-		} else {
-			if (valid) {
-				newString += code.substring(begin, end);
-				begin = end;
-			}
-			valid = false;
-		}
-	}
-
-	if (begin < code.length + 1) {
-		newString += mNemReplace(code.substring(begin));
-	}
-	
-	return newString;
+  let result;
+  let begin = 0;
+    
+  while (result = TAGEXPR.exec(code)) {
+    const end = tags.find(item => item === result[1]) ? result.index : TAGEXPR.lastIndex; 
+    const toReplace = code.substring(begin, end);
+    const newString = symbolReplace(toReplace);
+    const diff = newString.length - toReplace.length;
+    code = code.replace(toReplace, newString);
+    begin = TAGEXPR.lastIndex + diff;
+  }
+    
+  if (begin != code.length - 1) {
+     const toReplace = code.substring(begin);
+     code = code.replace(toReplace, symbolReplace(toReplace));
+  }
+    
+  return code;
 }

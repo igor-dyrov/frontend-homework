@@ -1,6 +1,6 @@
 'use strict';
 
-const TAGEXPR = /<\/?([^>\s]+)[^>]*>/g;
+const TAGEXPR = /<\/?([^>\s\/]+)[^>]*\/?>/g;
 const MNEMES = {
     '\'': '&#39;',
     '"' : '&quot;',

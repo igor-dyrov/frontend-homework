@@ -34,8 +34,13 @@ QUnit.module('Проверка работы функции filter', function () 
 		assert.strictEqual(filter(`<strong> Example <script> & </script> </strong>`, ['strong']), '<strong> Example &lt;script&gt; &amp; &lt;/script&gt; </strong>');
 	});
 
+	QUnit.test('пустой код', function (assert) {
+		assert.strictEqual(filter(``, ['strong']), '');
+	});
+
 	 QUnit.test('одиночные тэги', function (assert) {
 		assert.strictEqual(filter(`<strong> Example <em> & </strong>`, ['strong', 'em']), '<strong> Example <em> &amp; </strong>');
 		assert.strictEqual(filter('<img src="..." >', ['img']), '<img src="..." >');
+		assert.strictEqual(filter('<br/>', ['br']), '<br/>');
 	 });
 });
